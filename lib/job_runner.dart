@@ -1,14 +1,20 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
+import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/services/job_service.dart';
 import 'package:job_runner/src/shared/constants.dart';
 
 class JobRunner {
-
   Future<void> run(List<String> args) async {
-    
     final jobs = await JobService().readJobs();
-    await jobs.first.run();
-    print(constants.variableSerices.get('TOKEN', 'system'));
-    print('a');
-  }
 
+    await Future.forEach(jobs, (Job job) async {
+      if (!constants.isStopped) {
+        await job.run();
+        await Future.delayed(Duration(seconds: 2));
+      } else {
+        print('pulando...');
+      }
+    });
+  }
 }

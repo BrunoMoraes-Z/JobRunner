@@ -11,7 +11,6 @@ dependencies:
   jmespath: ^2.0.1
   intl: ^0.17.0
   requests: ^4.4.1
-  queue: ^3.1.0+1
   ftpconnect: ^1.0.1
 
 dev_dependencies:

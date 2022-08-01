@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/enums/job_type.dart';
 import 'package:job_runner/src/services/fail_services.dart';
@@ -44,7 +42,10 @@ class ReadUrlJob extends Job {
       constants.variableSerices.register(itemName, result);
       return true;
     } else {
-      FailServices(action: onFail, message: '[GET] ($tag) ${response.statusCode} >> ${response.body}').notify();
+      FailServices(
+        action: onFail,
+        message: '[GET] ($tag) ${response.statusCode} >> ${response.body}',
+      ).notify();
     }
     return false;
   }

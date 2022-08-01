@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:job_runner/src/enums/job_type.dart';
 import 'package:job_runner/src/models/job.dart';
+import 'package:job_runner/src/models/types/delete_folder_job.dart';
+import 'package:job_runner/src/models/types/download_auth_token_job.dart';
 import 'package:job_runner/src/models/types/read_url_job.dart';
+import 'package:job_runner/src/models/types/unzip_job.dart';
 
 class JobService {
   Future<List<Job>> readJobs() async {
@@ -22,10 +25,13 @@ class JobService {
             jobs.add(ReadUrlJob.parse(item));
             break;
           case JobType.downloadAuthToken:
+            jobs.add(DownloadAuthTokenJob.parse(item));
             break;
           case JobType.unzip:
+            jobs.add(UnzipJob.parse(item));
             break;
           case JobType.deleteFolder:
+            jobs.add(DeleteFolderJob.parse(item));
             break;
           case JobType.runCommand:
             break;
