@@ -35,7 +35,7 @@ class ReadUrlJob extends Job {
 
   @override
   Future<bool> run() async {
-    final response = await Requests.get(url);
+    final response = await Requests.get(url, timeoutSeconds: 100);
     if (response.statusCode == 200) {
       final body = response.json();
       final result = search(itemPath, body);

@@ -4,6 +4,11 @@
 
 # Conventional directory for build output.
 build/
+bin/work
+bin/results
+work/
+results/
 
+*.exe
 .env
 jobs.json

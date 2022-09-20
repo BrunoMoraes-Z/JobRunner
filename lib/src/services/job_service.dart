@@ -6,11 +6,12 @@ import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/models/types/delete_folder_job.dart';
 import 'package:job_runner/src/models/types/download_auth_token_job.dart';
 import 'package:job_runner/src/models/types/read_url_job.dart';
+import 'package:job_runner/src/models/types/run_command_job.dart';
 import 'package:job_runner/src/models/types/unzip_job.dart';
 
 class JobService {
   Future<List<Job>> readJobs() async {
-    final file = File('jobs.json');
+    final file = File('${Directory.fromUri(Platform.script).parent.path}/jobs.json');
     final rawContent = jsonDecode(
       await file.readAsString(),
     ) as List<dynamic>;
@@ -34,6 +35,7 @@ class JobService {
             jobs.add(DeleteFolderJob.parse(item));
             break;
           case JobType.runCommand:
+            jobs.add(RunCommandJob.parse(item));
             break;
           default:
         }

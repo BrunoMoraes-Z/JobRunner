@@ -7,8 +7,6 @@ import 'package:job_runner/src/models/variable.dart';
 import 'package:job_runner/src/services/fail_services.dart';
 import 'package:requests/requests.dart';
 
-const pattern = r'{{[aA-zZ0-9]{1,}}}';
-
 class DownloadAuthTokenJob extends Job {
   @override
   JobType get jobType => JobType.downloadAuthToken;
@@ -35,8 +33,8 @@ class DownloadAuthTokenJob extends Job {
     return DownloadAuthTokenJob(
       onFail: json['onFail'],
       tag: json['tag'],
-      url: json['url'],
-      workdir: json['workdir'],
+      url: (json['url'] as String).parseVariables(),
+      workdir: (json['workdir'] as String).parseVariables(),
       authType: json['authType'],
       tokenVariable: json['tokenVariable'],
       variables: (json['variables'] as List)
@@ -54,31 +52,30 @@ class DownloadAuthTokenJob extends Job {
     if (authType.toLowerCase() == 'basic') {
       token = base64.encode(utf8.encode('$token:'));
     }
+    
+    var workingDir = workdir;
 
-    var parsedUrl = url;
-
-    if (RegExp(pattern).hasMatch(url)) {
-      for (var element in variables) {
-        if (url.contains('{{${element.name}}}') && element.value != null) {
-          parsedUrl = url.replaceAll('{{${element.name}}}', element.value!);
-        }
-      }
+    if (Platform.isWindows && workdir.startsWith("/")) {
+      workingDir = workdir.replaceFirst("/", "");
     }
+
+    var parsedUrl = url.parseVariables(variables: variables);
 
     final response = await Requests.get(
       parsedUrl,
       headers: {'Authorization': '$authType $token'},
+      timeoutSeconds: 300,
     );
     if (response.statusCode == 200) {
-      if (await Directory(workdir).exists()) {
-        await Directory(workdir).delete(recursive: true);
+      if (await Directory(workingDir).exists()) {
+        await Directory(workingDir).delete(recursive: true);
       }
-      await Directory(workdir).create(recursive: true);
+      await Directory(workingDir).create(recursive: true);
 
       print(tag);
 
       final file =
-          await File('$workdir/download.zip').writeAsBytes(response.bodyBytes);
+          await File('$workingDir/download.zip').writeAsBytes(response.bodyBytes);
       int size = (await file.length() / 1024).round();
       print(
         'Arquivo baixado com tamanho de ($size KB | ${(size / 1000).round()} MB).',

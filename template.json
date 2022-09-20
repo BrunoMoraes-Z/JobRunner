@@ -1,0 +1,102 @@
+[
+    {
+        "type": "read_json_from_url",
+        "onFail": "stop",
+        "tag": "Recuperar Token",
+        "url": "json URL",
+        "item": {
+            "path": "json.path",
+            "name": "TOKEN"
+        }
+    },
+    {
+        "type": "download_auth_token",
+        "onFail": "stop",
+        "tag": "Baixando Projeto - RPA",
+        "url": "url",
+        "workdir": "{{curdir}}/work/rpa",
+        "authType": "Basic",
+        "tokenVariable": "TOKEN",
+        "variables": [
+            {
+                "name": "TOKEN",
+                "origin": "system"
+            },
+            {
+                "name": "branch",
+                "origin": "env"
+            }
+        ]
+    },
+    {
+        "type": "unzip",
+        "onFail": "stop",
+        "targetFile": "download.zip",
+        "workdir": "{{curdir}}/work/rpa"
+    },
+    {
+        "type": "download_auth_token",
+        "onFail": "stop",
+        "tag": "Baixando Projeto",
+        "url": "url",
+        "workdir": "{{curdir}}/work/data",
+        "authType": "Basic",
+        "tokenVariable": "TOKEN",
+        "variables": [
+            {
+                "name": "TOKEN",
+                "origin": "system"
+            },
+            {
+                "name": "branch",
+                "origin": "env"
+            }
+        ]
+    },
+    {
+        "type": "unzip",
+        "onFail": "stop",
+        "targetFile": "download.zip",
+        "workdir": "{{curdir}}/work/data"
+    },
+    {
+        "type": "run_command",
+        "onFail": "stop",
+        "tag": "Executando Analise de codigo",
+        "command": "comando...",
+        "workdir": "",
+        "variables": [
+            {
+                "name": "ambiente",
+                "origin": "homo"
+            },
+            {
+                "name": "service",
+                "origin": "chain"
+            },
+            {
+                "name": "dir",
+                "origin": "{{curdir}}/work/data"
+            },
+            {
+                "name": "targetFolder",
+                "origin": "{{curdir}}/work/rpa"
+            }
+        ]
+    },
+    {
+        "type": "delete_folder",
+        "onFail": "warn",
+        "targetFolder": "{{curdir}}/work"
+    },
+    {
+        "type": "delete_folder",
+        "onFail": "warn",
+        "targetFolder": "{{curdir}}/results"
+    },
+    {
+        "type": "delete_folder",
+        "onFail": "warn",
+        "targetFolder": "{{curdir}}/Coverage"
+    }
+]

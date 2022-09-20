@@ -19,20 +19,27 @@ class DeleteFolderJob extends Job {
   static DeleteFolderJob parse(Map<String, dynamic> json) {
     return DeleteFolderJob(
       onFail: json['onFail'],
-      targetFolder: json['targetFolder'],
+      targetFolder: (json['targetFolder'] as String).parseVariables(),
     );
   }
 
   @override
   Future<bool> run() async {
+    
+    var workingDir = targetFolder;
+
+    if (Platform.isWindows && targetFolder.startsWith("/")) {
+      workingDir = targetFolder.replaceFirst("/", "");
+    }
+    
     try {
-      if (await Directory(targetFolder).exists()) {
-        await Directory(targetFolder).delete(recursive: true);
+      if (await Directory(workingDir).exists()) {
+        await Directory(workingDir).delete(recursive: true);
       }
     } catch (e) {
       FailServices(
         action: onFail,
-        message: '[SYSTEM] [DELETE_FOLDER] ouve um erro ao tentar deletar a pasta ($targetFolder).',
+        message: '[SYSTEM] [DELETE_FOLDER] ouve um erro ao tentar deletar a pasta ($workingDir).',
       ).notify();
     }
 

@@ -23,21 +23,28 @@ class UnzipJob extends Job {
     return UnzipJob(
       onFail: json['onFail'],
       targetFile: json['targetFile'],
-      workdir: json['workdir'],
+      workdir: (json['workdir'] as String).parseVariables(),
     );
   }
 
   @override
   Future<bool> run() async {
-    if (!await Directory(workdir).exists()) {
+    
+    var workingDir = workdir;
+
+    if (Platform.isWindows && workdir.startsWith("/")) {
+      workingDir = workdir.replaceFirst("/", "");
+    }
+    
+    if (!await Directory(workingDir).exists()) {
       FailServices(
         action: onFail,
-        message: '[UNZIP] Pasta ($workdir) nao encontrado.',
+        message: '[UNZIP] Pasta ($workingDir) nao encontrado.',
       ).notify();
       return false;
     }
 
-    if (!await File('$workdir/$targetFile').exists()) {
+    if (!await File('$workingDir/$targetFile').exists()) {
       FailServices(
         action: onFail,
         message: '[UNZIP] Arquivo ($targetFile) nao encontrado.',
@@ -45,7 +52,8 @@ class UnzipJob extends Job {
       return false;
     }
 
-    await FTPConnect.unZipFile(File('$workdir/$targetFile'), workdir);
+    await FTPConnect.unZipFile(File('$workingDir/$targetFile'), workingDir);
+    print('Arquivo $targetFile descompactado com sucesso.');
 
     return false;
   }
