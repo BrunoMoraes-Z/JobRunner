@@ -21,7 +21,7 @@ class VariableSerices {
     return list;
   }
 
-  String? get(String key, String origin) {
+  dynamic get(String key, String origin) {
     switch (origin.toLowerCase()) {
       case 'system':
         return _map[key.toUpperCase()];

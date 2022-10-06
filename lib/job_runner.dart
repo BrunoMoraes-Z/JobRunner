@@ -13,13 +13,13 @@ class JobRunner {
       if (!constants.isStopped) {
         try {
           await job.run();
+          await Future.delayed(Duration(milliseconds: 500));
         } catch (e) {
           FailServices(
             action: 'stop',
             message: '[SYSTEM] [${job.jobType.name.toUpperCase()}] ${e.toString()}',
           ).notify();
         }
-        await Future.delayed(Duration(milliseconds: 500));
       }
     });
   }

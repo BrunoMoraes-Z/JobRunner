@@ -24,7 +24,9 @@ extension StringExtension on String {
           for (var element in variable) { 
             var value = constants.variableSerices.get(element.name, element.origin);
             if (value != null) {
-              finalItem = finalItem.replaceAll(match.value, value.parseVariables());
+              if (value is String) {
+                finalItem = finalItem.replaceAll(match.value, value.parseVariables());
+              }
             }
           }
           

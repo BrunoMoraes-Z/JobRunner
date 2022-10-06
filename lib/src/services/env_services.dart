@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:job_runner/src/shared/constants.dart';
+
 class EnvService {
   final Map<String, dynamic> _map = {};
 
@@ -16,7 +18,7 @@ class EnvService {
     for (var line in lines) {
       _map[line.split('=')[0].toUpperCase()] = line.split('=').sublist(1).join('=').trim();
     }
-    _map['CURDIR'] = File(Platform.script.path).parent.path;
+    _map['CURDIR'] = Constants.currentDir.path;
     if (_map['CURDIR'].toString().startsWith("/")) {
       _map['CURDIR'] = _map['CURDIR'].toString().replaceFirst('/', '');
     }

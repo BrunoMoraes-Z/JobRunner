@@ -66,6 +66,7 @@ class DownloadAuthTokenJob extends Job {
       headers: {'Authorization': '$authType $token'},
       timeoutSeconds: 300,
     );
+    
     if (response.statusCode == 200) {
       if (await Directory(workingDir).exists()) {
         await Directory(workingDir).delete(recursive: true);

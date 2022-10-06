@@ -5,8 +5,10 @@ import 'package:job_runner/src/enums/job_type.dart';
 import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/models/types/delete_folder_job.dart';
 import 'package:job_runner/src/models/types/download_auth_token_job.dart';
+import 'package:job_runner/src/models/types/multi_json_reader_job.dart';
 import 'package:job_runner/src/models/types/read_url_job.dart';
 import 'package:job_runner/src/models/types/run_command_job.dart';
+import 'package:job_runner/src/models/types/run_command_loop_job.dart';
 import 'package:job_runner/src/models/types/unzip_job.dart';
 
 class JobService {
@@ -36,6 +38,12 @@ class JobService {
             break;
           case JobType.runCommand:
             jobs.add(RunCommandJob.parse(item));
+            break;
+          case JobType.multiReadJson:
+            jobs.add(MultiJsonReaderJob.parse(item));
+            break;
+          case JobType.runCommandLoop:
+            jobs.add(RunCommandLoopJob.parse(item));
             break;
           default:
         }
