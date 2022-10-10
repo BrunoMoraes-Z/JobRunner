@@ -6,8 +6,10 @@
 build/
 bin/work
 bin/results
+bin/logs
 work/
 results/
+Coverage
 
 *.exe
 .env

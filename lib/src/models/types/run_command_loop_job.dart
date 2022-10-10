@@ -77,23 +77,26 @@ class RunCommandLoopJob extends Job {
         if (process.exitCode == 1) {
           names.add(itemName);
           finalLog.addAll(log);
-          break;
         }
       }
 
       if (names.isNotEmpty) {
         print('');
         print('Os itens abaixo não foram executados com sucesso.');
-        print('');
-        print(names.join(', '));
+        print('[${names.join(', ')}]');
         print('');
 
         var logName = 'log_${DateTime.now().millisecondsSinceEpoch}';
-        var logFile = File('${constants.variableSerices.get("curdir", "env")}/logs/$logName.txt');
-        
+        var logFile = File(
+            '${constants.variableSerices.get("curdir", "env")}/logs/$logName.txt');
+
         await logFile.create(recursive: true);
         await logFile.writeAsString(finalLog.join('\n'));
-        await FTPConnect.zipFiles([logFile.path], File('${constants.variableSerices.get("curdir", "env")}/logs/$logName.zip').path);
+        await FTPConnect.zipFiles(
+          [logFile.path],
+          File('${constants.variableSerices.get("curdir", "env")}/logs/$logName.zip')
+              .path,
+        );
         await logFile.delete(recursive: true);
       }
     }
