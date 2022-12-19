@@ -5,6 +5,7 @@ import 'package:job_runner/src/enums/job_type.dart';
 import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/models/variable.dart';
 import 'package:job_runner/src/services/fail_services.dart';
+import 'package:job_runner/src/shared/constants.dart';
 import 'package:requests/requests.dart';
 
 class DownloadAuthTokenJob extends Job {
@@ -73,14 +74,12 @@ class DownloadAuthTokenJob extends Job {
       }
       await Directory(workingDir).create(recursive: true);
 
-      print(tag);
+      constants.logger.log(tag);
 
       final file =
           await File('$workingDir/download.zip').writeAsBytes(response.bodyBytes);
       int size = (await file.length() / 1024).round();
-      print(
-        'Arquivo baixado com tamanho de ($size KB | ${(size / 1000).round()} MB).',
-      );
+      constants.logger.log('Arquivo baixado com tamanho de ($size KB | ${(size / 1000).round()} MB).');
     } else {
       FailServices(
         action: onFail,

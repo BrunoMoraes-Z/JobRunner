@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:job_runner/src/enums/job_type.dart';
 import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/models/variable.dart';
+import 'package:job_runner/src/shared/constants.dart';
 
 class RunCommandJob extends Job {
   @override
@@ -59,7 +60,7 @@ class RunCommandJob extends Job {
         log.add(element);
       }
     });
-    log.forEach((element) => print(element));
+    log.forEach((element) => constants.logger.log(element));
     return false;
   }
 }

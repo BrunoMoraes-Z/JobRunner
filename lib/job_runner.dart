@@ -24,6 +24,7 @@ class JobRunner {
       }
     });
 
+    await constants.logger.close();
     await LogCleaner().run();
   }
 }

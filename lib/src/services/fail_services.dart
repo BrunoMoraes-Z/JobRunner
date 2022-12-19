@@ -1,4 +1,5 @@
 import 'package:job_runner/src/shared/constants.dart';
+import 'package:job_runner/src/shared/simple_log.dart';
 
 class FailServices {
   
@@ -13,14 +14,17 @@ class FailServices {
   notify() {
     switch (action.toLowerCase()) {
       case 'warn':
-        print('[AVISO] >> $message');
+        constants.logger.log(message, type: LogType.warning);
+        // print('[AVISO] >> $message');
         break;
       case 'stop':
-        print('[ERRO] >> $message');
+        constants.logger.log(message, type: LogType.error);
+        // print('[ERRO] >> $message');
         constants.stop();
         break;
       default:
-        print('[?] >> $message');
+        constants.logger.log(message, type: LogType.warning);
+        // print('[?] >> $message');
     }
     print(' ');
   }

@@ -4,6 +4,7 @@ import 'package:ftpconnect/ftpconnect.dart';
 import 'package:job_runner/src/enums/job_type.dart';
 import 'package:job_runner/src/models/job.dart';
 import 'package:job_runner/src/services/fail_services.dart';
+import 'package:job_runner/src/shared/constants.dart';
 
 class UnzipJob extends Job {
   @override
@@ -29,13 +30,12 @@ class UnzipJob extends Job {
 
   @override
   Future<bool> run() async {
-    
     var workingDir = workdir;
 
     if (Platform.isWindows && workdir.startsWith("/")) {
       workingDir = workdir.replaceFirst("/", "");
     }
-    
+
     if (!await Directory(workingDir).exists()) {
       FailServices(
         action: onFail,
@@ -53,8 +53,7 @@ class UnzipJob extends Job {
     }
 
     await FTPConnect.unZipFile(File('$workingDir/$targetFile'), workingDir);
-    print('Arquivo $targetFile descompactado com sucesso.');
-
+    constants.logger.log('Arquivo $targetFile descompactado com sucesso.');
     return false;
   }
 }

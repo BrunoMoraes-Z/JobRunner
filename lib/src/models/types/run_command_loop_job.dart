@@ -56,12 +56,14 @@ class RunCommandLoopJob extends Job {
 
     var result = constants.variableSerices.get(targetVariable, 'system');
     if (result is List) {
-      var names = [], finalLog = [];
       for (var itemName in result) {
-        var exeCommand =
-            command.parseVariables(variables: variables, includeAll: true);
+        var exeCommand = command.parseVariables(
+          variables: variables,
+          includeAll: true,
+        );
         exeCommand = exeCommand.replaceAll('{{$replacer}}', itemName);
-        print(exeCommand);
+        constants.logger.log(' ');
+        constants.logger.log(exeCommand);
         var process = await Process.run(
           exeCommand.split(" ")[0],
           exeCommand.split(" ")..removeAt(0),
@@ -73,31 +75,7 @@ class RunCommandLoopJob extends Job {
             log.add(element);
           }
         });
-        log.forEach((element) => print(element));
-        if (process.exitCode == 1) {
-          names.add(itemName);
-          finalLog.addAll(log);
-        }
-      }
-
-      if (names.isNotEmpty) {
-        print('');
-        print('Os itens abaixo não foram executados com sucesso.');
-        print('[${names.join(', ')}]');
-        print('');
-
-        var logName = 'log_${DateTime.now().millisecondsSinceEpoch}';
-        var logFile = File(
-            '${constants.variableSerices.get("curdir", "env")}/logs/$logName.txt');
-
-        await logFile.create(recursive: true);
-        await logFile.writeAsString(finalLog.join('\n'));
-        await FTPConnect.zipFiles(
-          [logFile.path],
-          File('${constants.variableSerices.get("curdir", "env")}/logs/$logName.zip')
-              .path,
-        );
-        await logFile.delete(recursive: true);
+        log.forEach((element) => constants.logger.log(element));
       }
     }
 
