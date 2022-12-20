@@ -18,7 +18,7 @@ class SimpleLog {
     }
   }
 
-  get timestamp => DateFormat('dd-mm-yyyy HH:mm:ss.sss').format(DateTime.now());
+  get timestamp => DateFormat('dd-MM-yyyy HH:mm:ss.sss').format(DateTime.now());
 
   void log(String message, {LogType type = LogType.info}) {
     if (message.endsWith('\n')) {
